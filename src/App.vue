@@ -1,17 +1,33 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js App" />
+    <h1>Donations</h1>
+    <input v-model="montant" /><button v-on:click="ajouterMontant()">
+      ajouter
+    </button>
+    <p v-if="montant < 0">Merci d'indiquer un chiffre > 0 </p>
+    <ul>
+      <li v-for="(donation, index) in donations" v-bind:key="index">
+        {{ donation }} <!-- button qui supprime -->
+      </li>
+    </ul>
   </div>
 </template>
 
 <script>
-import HelloWorld from "./components/HelloWorld.vue";
-
 export default {
   name: "App",
-  components: {
-    HelloWorld,
+  data() {
+    return {
+      montant: "",
+      donations: [45.6, 32, 34],
+    };
+  },
+  methods: {
+    ajouterMontant() {
+      const montant = parseInt(this.montant);
+      this.donations.push(montant);
+      this.montant = "";
+    },
   },
 };
 </script>
