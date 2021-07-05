@@ -22,12 +22,14 @@
     </div>
     <p>Total: {{ toChf(total) }}</p>
     <app-add v-on:ajouter="creerDonation($event)"></app-add>
+    <search-cat></search-cat>
   </div>
 </template>
 
 <script>
 import AppAdd from "./components/AppAdd.vue";
 import AppDonation from "./components/AppDonation.vue";
+import SearchCat from './components/SearchCat.vue';
 import { toChf } from "./toChf.js";
 
 export default {
@@ -35,8 +37,10 @@ export default {
   components: {
     AppAdd,
     AppDonation,
+    SearchCat,
   },
   data() {
+    // charger la liste depuis le localStorage si elle existe
     return {
       donations: [
         {
@@ -76,10 +80,15 @@ export default {
       this.donations.push({
         value: montant,
       });
+      this.saveDonations();
     },
     supprimerDonation(donation) {
       const index = this.donations.indexOf(donation);
       this.donations.splice(index, 1);
+      this.saveDonations();
+    },
+    saveDonations() {
+      // TODO: serialiser et stocker la liste dans le localStorage
     },
     toChf,
   },
