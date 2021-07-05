@@ -1,33 +1,87 @@
 <template>
   <div id="app">
     <h1>Donations</h1>
-    <input v-model="montant" /><button v-on:click="ajouterMontant()">
-      ajouter
-    </button>
-    <p v-if="montant < 0">Merci d'indiquer un chiffre > 0 </p>
-    <ul>
-      <li v-for="(donation, index) in donations" v-bind:key="index">
-        {{ donation }} <!-- button qui supprime -->
-      </li>
-    </ul>
+    <app-add v-on:ajouter="creerDonation($event)"></app-add>
+    <p>
+      <label
+        ><input type="radio" name="orderBy" value="recent" v-model="orderBy" />
+        Récent</label
+      >
+      <label
+        ><input type="radio" name="orderBy" value="top" v-model="orderBy" />
+        Top</label
+      >
+    </p>
+    <div>
+      <app-donation
+        v-for="(donation, index) in orderedDonations"
+        v-bind:donation="donation"
+        v-on:supprimer="supprimerDonation(donation)"
+        v-bind:key="index"
+      ></app-donation>
+    </div>
+    <p>Total: {{ toChf(total) }}</p>
+    <app-add v-on:ajouter="creerDonation($event)"></app-add>
   </div>
 </template>
 
 <script>
+import AppAdd from "./components/AppAdd.vue";
+import AppDonation from "./components/AppDonation.vue";
+import { toChf } from "./toChf.js";
+
 export default {
   name: "App",
+  components: {
+    AppAdd,
+    AppDonation,
+  },
   data() {
     return {
-      montant: "",
-      donations: [45.6, 32, 34],
+      donations: [
+        {
+          value: 45.6,
+        },
+        {
+          value: 32,
+        },
+        {
+          value: 34,
+        },
+      ],
+      orderBy: "recent",
     };
   },
-  methods: {
-    ajouterMontant() {
-      const montant = parseInt(this.montant);
-      this.donations.push(montant);
-      this.montant = "";
+  computed: {
+    total() {
+      let total = 0;
+      for (let el of this.donations) {
+        total = total + el.value; // total += el
+      }
+      return total;
     },
+    orderedDonations() {
+      if (this.orderBy === "top") {
+        const orderedDonations = this.donations.slice(0);
+        orderedDonations.sort((a, b) => {
+          return b.value - a.value;
+        });
+        return orderedDonations;
+      }
+      return this.donations;
+    },
+  },
+  methods: {
+    creerDonation(montant) {
+      this.donations.push({
+        value: montant,
+      });
+    },
+    supprimerDonation(donation) {
+      const index = this.donations.indexOf(donation);
+      this.donations.splice(index, 1);
+    },
+    toChf,
   },
 };
 </script>
@@ -40,5 +94,12 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+.error {
+  color: red;
+}
+
+.chevron {
+  width: 30px;
 }
 </style>
