@@ -8,7 +8,6 @@
     </button>
     <p v-if="montant < 0" class="error">Merci d'indiquer un chiffre > 0</p>
     <p v-if="errorMsg" class="error">{{ errorMsg }}</p>
-
   </div>
 </template>
 
@@ -32,7 +31,7 @@ export default {
         this.errorMsg = "montant pas valide....";
       }
     },
-  }
+  },
 };
 
 /*

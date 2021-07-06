@@ -1,5 +1,11 @@
 <template>
   <div id="app">
+    <div id="nav">
+      {{ $root.stateGlobal }}
+      <router-link to="/">Home</router-link> |
+      <router-link v-bind:to="{ name: 'About' }">About</router-link>
+    </div>
+    <router-view />
     <h1>Donations</h1>
     <app-add v-on:ajouter="creerDonation($event)"></app-add>
     <p>

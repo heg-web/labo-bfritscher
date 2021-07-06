@@ -1,7 +1,12 @@
 <template>
   <div>
     <input v-model="query" /> <button v-on:click="search()">Search</button>
-    <img class="cat" v-for="cat in resultats" v-bind:src="cat.url" v-bind:key="cat.id" />
+    <img
+      class="cat"
+      v-for="cat in resultats"
+      v-bind:src="cat.url"
+      v-bind:key="cat.id"
+    />
   </div>
 </template>
 <script>
@@ -40,5 +45,4 @@ export default {
 .cat {
   width: 300px;
 }
-
 </style>
