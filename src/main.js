@@ -6,13 +6,21 @@ Vue.config.productionTip = false;
 
 new Vue({
   data() {
+    // charger un etat global du storage
+
     return {
-      stateGlobal: 45,
+      stateGlobal: {
+        maListe: [],
+        uneValeur: 34
+      },
     };
   },
   methods: {
     inc() {
-      this.stateGlobal += 1;
+      this.stateGlobal.uneValeur += 1;
+    },
+    save() {
+      // save localStorage
     }
   },
   router,
