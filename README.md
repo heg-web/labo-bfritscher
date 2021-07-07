@@ -1,6 +1,7 @@
 # labo-vue
 
-## Project setup Nouveau Titre depuis PC1
+## Project setup Nouveau Titre depuis PC1 et PC2
+
 ```
 npm install
 ```
