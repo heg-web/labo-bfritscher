@@ -35,8 +35,10 @@
 <script>
 import AppAdd from "./components/AppAdd.vue";
 import AppDonation from "./components/AppDonation.vue";
-import SearchCat from './components/SearchCat.vue';
+import SearchCat from "./components/SearchCat.vue";
 import { toChf } from "./toChf.js";
+
+const APP_STORAGE_KEY = "labo-donations";
 
 export default {
   name: "App",
@@ -47,18 +49,24 @@ export default {
   },
   data() {
     // charger la liste depuis le localStorage si elle existe
+
+    let donations = [
+      {
+        value: 45.6,
+      },
+      {
+        value: 32,
+      },
+      {
+        value: 34,
+      },
+    ];
+    const storageResult = localStorage.getItem(APP_STORAGE_KEY);
+    if (storageResult) {
+      donations = JSON.parse(storageResult);
+    }
     return {
-      donations: [
-        {
-          value: 45.6,
-        },
-        {
-          value: 32,
-        },
-        {
-          value: 34,
-        },
-      ],
+      donations: donations,
       orderBy: "recent",
     };
   },
@@ -95,6 +103,7 @@ export default {
     },
     saveDonations() {
       // TODO: serialiser et stocker la liste dans le localStorage
+      localStorage.setItem(APP_STORAGE_KEY, JSON.stringify(this.donations));
     },
     toChf,
   },
