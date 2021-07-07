@@ -1,6 +1,6 @@
 # labo-vue
 
-## Project setup
+## Project setup Nouveau Titre depuis PC1
 ```
 npm install
 ```
