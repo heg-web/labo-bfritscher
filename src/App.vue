@@ -3,9 +3,7 @@
         <h1>Donations</h1>
         <div class="row">
             <div class="col">
-                <input type="number" placeholder="Montant?" v-model.number="amount" />
-                <button v-on:click="addDonation" v-bind:disabled="amount <= 0">Ajouter</button>
-                <p v-if="amount !== '' && amount <= 0">Montant supérieur à 0</p>
+                <add-donation v-on:added="addDonation" />
 
                 <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" id="recent" value="recent" v-model="filter" />
@@ -17,61 +15,64 @@
                 </div>
 
                 <ul>
-                    <li v-for="(donation, index) in filteredDonations" v-bind:key="index">
-                        <img :src="amountToUrl(donation)" />
-                        {{ toCHF(donation) }} <button v-on:click="removeDonation(index)">X</button>
-                    </li>
+                    <app-donation
+                        v-for="d in filteredDonations"
+                        v-bind:key="d.id"
+                        v-bind:donation="d"
+                        v-on:removed="removeDonation(d)"
+                    ></app-donation>
                 </ul>
                 <p>{{ toCHF(total) }}</p>
+
+                <add-donation v-on:added="addDonation" />
             </div>
         </div>
     </div>
 </template>
 
 <script>
+import { nanoid } from "nanoid";
+import { toCHF } from "./filters";
+import AddDonation from "./components/AddDonation.vue";
+import AppDonation from "./components/AppDonation.vue";
+
 export default {
+    components: {
+        "add-donation": AddDonation,
+        "app-donation": AppDonation
+    },
     data() {
         return {
-            amount: "",
             donations: [],
             filter: "recent"
         };
     },
     computed: {
         total() {
-            return this.donations.reduce((total, donation) => total + donation, 0);
+            return this.donations.reduce((total, donation) => total + donation.amount, 0);
         },
         sortedByRecent() {
             return this.donations;
         },
         sortedByTop() {
-            return [...this.donations].sort((a, b) => b - a);
+            return [...this.donations].sort((a, b) => b.amount - a.amount);
         },
         filteredDonations() {
             return this.filter === "recent" ? this.sortedByRecent : this.sortedByTop;
         }
     },
     methods: {
-        addDonation() {
-            this.donations.push(this.amount);
-            this.amount = "";
+        addDonation(amount) {
+            this.donations.push({
+                id: nanoid(),
+                amount: amount
+            });
         },
-        removeDonation(index) {
+        removeDonation(donation) {
+            const index = this.donations.findIndex((d) => d.id === donation.id);
             this.donations.splice(index, 1);
         },
-        amountToUrl(amount) {
-            let level = 3;
-            if (amount <= 10) {
-                level = 1;
-            } else if (amount <= 20) {
-                level = 2;
-            }
-
-            return `https://gistcdn.githack.com/bfritscher/6ff8e74b80d44616944843fe83cc5d19/raw/2d4e25748fbbe681681932444a7ef339c90d4dde/chevron_${level}.svg`;
-        },
-        toCHF(amount) {
-            return `${amount.toFixed(2)} CHF`;
-        }
+        toCHF
     }
 };
 </script>
