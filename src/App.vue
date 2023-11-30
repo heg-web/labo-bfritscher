@@ -14,14 +14,14 @@
                     <label class="form-check-label" for="top">Top</label>
                 </div>
 
-                <ul>
+                <transition-group name="flip-list" tag="ul">
                     <app-donation
                         v-for="d in filteredDonations"
                         v-bind:key="d.id"
                         v-bind:donation="d"
                         v-on:removed="removeDonation(d)"
                     ></app-donation>
-                </ul>
+                </transition-group>
                 <p>{{ toCHF(total) }}</p>
 
                 <add-donation v-on:added="addDonation" />
