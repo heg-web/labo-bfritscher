@@ -1,13 +1,19 @@
-import { createRouter, createWebHistory } from "vue-router";
+import { createRouter, createWebHashHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
+import DonationView from "../views/DonationView.vue";
 
 const router = createRouter({
-    history: createWebHistory(import.meta.env.BASE_URL),
+    history: createWebHashHistory(import.meta.env.BASE_URL),
     routes: [
         {
             path: "/",
             name: "home",
             component: HomeView
+        },
+        {
+            path: "/donations",
+            name: "donations",
+            component: DonationView
         },
         {
             path: "/about",
