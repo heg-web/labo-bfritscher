@@ -7,6 +7,7 @@
         <ul v-for="donation in donations" v-bind:key="donation.id">
             <li>{{ donation.amount }} <button v-on:click="remove(donation)">X</button></li>
         </ul>
+        <p>{{ total }}</p>
     </div>
 </template>
 
@@ -27,6 +28,16 @@ export default {
             amount: "",
             donations: [createDonation(12, "This is a comment"), createDonation(15)]
         };
+    },
+    computed: {
+        total() {
+            // return this.donations.reduce((acc, d) => acc + d.amount, 0);
+            let total = 0;
+            for (let d of this.donations) {
+                total += d.amount;
+            }
+            return total;
+        }
     },
     methods: {
         addDonation() {
