@@ -29,15 +29,27 @@ function find(func) {
     }
 }
 */
+
+const LOCAL_STORAGE_KEY = "myapp-donations";
+
 export default {
     components: {
         DonationItem,
         DonationAdd
     },
     data() {
+        let donations = localStorage.getItem(LOCAL_STORAGE_KEY);
+        if (donations) {
+            try {
+                donations = JSON.parse(donations);
+            } catch (e) {
+                donations = [];
+            }
+        }
+
         return {
             sortType: "recent",
-            donations: [createDonation(12, "This is a comment"), createDonation(15)]
+            donations: donations || []
         };
     },
     computed: {
@@ -66,6 +78,17 @@ export default {
             //if (index !== -1) {
             this.donations.splice(index, 1);
             //}
+        },
+        save() {
+            localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(this.donations));
+        }
+    },
+    watch: {
+        donations: {
+            handler() {
+                this.save();
+            },
+            deep: true
         }
     }
 };
