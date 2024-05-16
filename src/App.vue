@@ -9,8 +9,8 @@
             <label><input type="radio" name="sort" value="recent" v-model="sortType" /> Recent</label>
             <label><input type="radio" name="sort" value="top" v-model="sortType" /> Top</label>
         </p>
-        <ul v-for="donation in donationSorted" v-bind:key="donation.id">
-            <li>{{ donation.amount }} <button v-on:click="remove(donation)">X</button></li>
+        <ul>
+            <donation-item :donation="d" v-for="d in donationSorted" v-bind:key="d.id" v-on:remove="remove(d)" />
         </ul>
         <p>{{ total }}</p>
     </div>
@@ -18,6 +18,7 @@
 
 <script>
 import { createDonation } from "./utils";
+import DonationItem from "./components/DonationItem.vue";
 /* methods sur Array
 function find(func) {
     for (let d of this) {
@@ -28,6 +29,9 @@ function find(func) {
 }
 */
 export default {
+    components: {
+        DonationItem
+    },
     data() {
         return {
             amount: "",
