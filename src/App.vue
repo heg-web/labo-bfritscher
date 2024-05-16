@@ -1,9 +1,7 @@
 <template>
     <div class="container">
         <h1>Hello Bootstrap</h1>
-        <input v-model.number="amount" placeholder="12.00" type="number" />
-        <button v-on:click="addDonation()" v-bind:disabled="amount <= 0">add</button>
-        <p v-if="amount <= 0 && amount !== ''">amount must be > 0</p>
+        <donation-add v-on:add="addDonation" />
 
         <p>
             <label><input type="radio" name="sort" value="recent" v-model="sortType" /> Recent</label>
@@ -13,12 +11,15 @@
             <donation-item :donation="d" v-for="d in donationSorted" v-bind:key="d.id" v-on:remove="remove(d)" />
         </ul>
         <p>{{ total }}</p>
+
+        <donation-add v-on:add="addDonation($event)" />
     </div>
 </template>
 
 <script>
 import { createDonation } from "./utils";
 import DonationItem from "./components/DonationItem.vue";
+import DonationAdd from "./components/DonationAdd.vue";
 /* methods sur Array
 function find(func) {
     for (let d of this) {
@@ -30,11 +31,11 @@ function find(func) {
 */
 export default {
     components: {
-        DonationItem
+        DonationItem,
+        DonationAdd
     },
     data() {
         return {
-            amount: "",
             sortType: "recent",
             donations: [createDonation(12, "This is a comment"), createDonation(15)]
         };
@@ -56,9 +57,8 @@ export default {
         }
     },
     methods: {
-        addDonation() {
-            this.donations.unshift(createDonation(this.amount));
-            this.amount = "";
+        addDonation(amount) {
+            this.donations.unshift(createDonation(amount));
         },
         remove(donation) {
             // const donationInDonations = this.donations.find((d) => d.id === donation.id);
