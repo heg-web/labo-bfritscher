@@ -4,7 +4,12 @@
         <input v-model.number="amount" placeholder="12.00" type="number" />
         <button v-on:click="addDonation()" v-bind:disabled="amount <= 0">add</button>
         <p v-if="amount <= 0 && amount !== ''">amount must be > 0</p>
-        <ul v-for="donation in donations" v-bind:key="donation.id">
+
+        <p>
+            <label><input type="radio" name="sort" value="recent" v-model="sortType" /> Recent</label>
+            <label><input type="radio" name="sort" value="top" v-model="sortType" /> Top</label>
+        </p>
+        <ul v-for="donation in donationSorted" v-bind:key="donation.id">
             <li>{{ donation.amount }} <button v-on:click="remove(donation)">X</button></li>
         </ul>
         <p>{{ total }}</p>
@@ -26,6 +31,7 @@ export default {
     data() {
         return {
             amount: "",
+            sortType: "recent",
             donations: [createDonation(12, "This is a comment"), createDonation(15)]
         };
     },
@@ -37,11 +43,17 @@ export default {
                 total += d.amount;
             }
             return total;
+        },
+        donationSorted() {
+            if (this.sortType === "recent") {
+                return this.donations;
+            }
+            return this.donations.toSorted((a, b) => b.amount - a.amount);
         }
     },
     methods: {
         addDonation() {
-            this.donations.push(createDonation(this.amount));
+            this.donations.unshift(createDonation(this.amount));
             this.amount = "";
         },
         remove(donation) {
