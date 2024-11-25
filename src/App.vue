@@ -13,6 +13,7 @@
                 </div>
                 <ul>
                     <li v-for="(donation, index) in sortedDonations" v-bind:key="index">
+                        <img v-bind:src="donationToImg(donation)" >
                         {{ toCHF(donation.amount) }}
                         <button v-on:click="removeDonation(donation)">x</button>
                     </li>
@@ -67,6 +68,15 @@ export default {
         }
     },
     methods: {
+        donationToImg(donation) {
+            let level = 3;
+            if (donation.amount < 10) {
+                level = 1;
+            } else if (donation.amount < 20) {
+                level = 2;
+            }
+            return `https://gistcdn.githack.com/bfritscher/6ff8e74b80d44616944843fe83cc5d19/raw/2d4e25748fbbe681681932444a7ef339c90d4dde/chevron_${level}.svg`;
+        },
         toCHF,
         addAmount() {
             this.donations.push(numberToDonation(this.amount));
@@ -87,5 +97,13 @@ export default {
 <style>
 .error {
     color: red;
+}
+ul {
+    list-style-type: none;
+}
+img {
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
 }
 </style>
