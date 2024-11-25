@@ -13,7 +13,7 @@
                 </div>
                 <ul>
                     <li v-for="(donation, index) in sortedDonations" v-bind:key="index">
-                        {{ donation }}
+                        {{ toCHF(donation) }}
                         <button v-on:click="removeDonation(index)">x</button>
                     </li>
                 </ul>
@@ -27,6 +27,8 @@
 </template>
 
 <script>
+import { toCHF } from "./utils/filters";
+
 export default {
     data() {
         return {
@@ -52,6 +54,7 @@ export default {
         }
     },
     methods: {
+        toCHF,
         addAmount() {
             this.donations.push(this.amount);
             this.amount = "";
