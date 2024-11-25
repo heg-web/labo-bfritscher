@@ -8,14 +8,14 @@
                     <label><input type="radio" name="sortOrder" v-model="sortOrder" value="r" /> Recent</label>
                     <label><input type="radio" name="sortOrder" v-model="sortOrder" value="t" />Top</label>
                 </div>
-                <ul>
+                <transition-group name="flip-list" tag="ul">
                     <app-donation
-                        v-for="(donation, index) in sortedDonations"
-                        v-bind:key="index"
+                        v-for="donation in sortedDonations"
+                        v-bind:key="donation.id"
                         v-bind:donation="donation"
                         v-on:remove-donation="removeDonation(donation)"
                     />
-                </ul>
+                </transition-group>
                 <p>Total: {{ toCHF(total) }}</p>
                 <app-add v-on:add-amount="addAmount" />
             </div>
@@ -31,9 +31,13 @@
 import { toCHF } from "./utils/filters";
 import AppDonation from "./components/AppDonation.vue";
 import AppAdd from "./components/AppAdd.vue";
+import { nanoid } from "nanoid";
 
 function numberToDonation(num) {
-    return { amount: num };
+    return {
+        id: nanoid(),
+        amount: num
+    };
 }
 
 export default {
@@ -93,5 +97,15 @@ img {
     width: 30px;
     height: 30px;
     margin-right: 10px;
+}
+.flip-list-move,
+.flip-list-enter-active,
+.flip-list-leave-active {
+    transition: transform 1s;
+    transition-timing-function: cubic-bezier(0.45,-1.12, 0, 1.54);
+}
+.flip-list-enter-from,
+.flip-list-leave-to {
+    transform: scale(0.2);
 }
 </style>

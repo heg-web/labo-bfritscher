@@ -2,6 +2,7 @@
     <li>
         <img v-bind:src="donationToImg" />
         {{ toCHF(donation.amount) }}
+        {{ donation.id }}
         <button v-on:click="removeDonation()">x</button>
     </li>
 </template>
