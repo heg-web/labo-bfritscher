@@ -6,8 +6,13 @@
                 <input type="number" v-model="amount" placeholder="100" v-on:keydown.enter="addAmount" />
                 <button v-on:click="addAmount" v-bind:disabled="!canAdd()">Ajouter</button>
                 <p v-if="!canAdd() && amount != ''" class="error">Nombre positif requis!</p>
+
+                <div>
+                    <label><input type="radio" name="sortOrder" v-model="sortOrder" value="r" /> Recent</label>
+                    <label><input type="radio" name="sortOrder" v-model="sortOrder" value="t" />Top</label>
+                </div>
                 <ul>
-                    <li v-for="(donation, index) in donations" v-bind:key="index">
+                    <li v-for="(donation, index) in sortedDonations" v-bind:key="index">
                         {{ donation }}
                         <button v-on:click="removeDonation(index)">x</button>
                     </li>
@@ -25,9 +30,26 @@
 export default {
     data() {
         return {
+            sortOrder: "r",
             amount: "",
             donations: [23, 53, 43]
         };
+    },
+    computed: {
+        topDonations() {
+            return this.donations.slice(0).sort((a, b) => {
+                return b - a;
+            });
+        },
+        sortedDonations() {
+            if (this.sortOrder === "r") {
+                return this.donations;
+            }
+            if (this.sortOrder === "t") {
+                return this.topDonations;
+            }
+            return [];
+        }
     },
     methods: {
         addAmount() {
