@@ -13,8 +13,8 @@
                 </div>
                 <ul>
                     <li v-for="(donation, index) in sortedDonations" v-bind:key="index">
-                        {{ toCHF(donation) }}
-                        <button v-on:click="removeDonation(index)">x</button>
+                        {{ toCHF(donation.amount) }}
+                        <button v-on:click="removeDonation(donation)">x</button>
                     </li>
                 </ul>
                 <p>Total: {{ toCHF(total) }}</p>
@@ -30,27 +30,31 @@
 <script>
 import { toCHF } from "./utils/filters";
 
+function numberToDonation(num) {
+    return { amount: num };
+}
+
 export default {
     data() {
         return {
             sortOrder: "r",
             amount: "",
-            donations: [23, 53, 43]
+            donations: [numberToDonation(23), numberToDonation(53), numberToDonation(43)]
         };
     },
     computed: {
         topDonations() {
             return this.donations.slice(0).sort((a, b) => {
-                return b - a;
+                return b.amount - a.amount;
             });
         },
         total() {
             let total = 0;
             for (let donation of this.donations) {
-                total += donation;
+                total += donation.amount;
             }
             return total;
-            // return this.donations.reduce((acc, donation) => acc + donation, 0);
+            // return this.donations.reduce((acc, donation) => acc + donation.value, 0);
         },
         sortedDonations() {
             if (this.sortOrder === "r") {
@@ -65,13 +69,14 @@ export default {
     methods: {
         toCHF,
         addAmount() {
-            this.donations.push(this.amount);
+            this.donations.push(numberToDonation(this.amount));
             this.amount = "";
         },
         canAdd() {
             return this.amount > 0;
         },
-        removeDonation(index) {
+        removeDonation(donation) {
+            const index = this.donations.indexOf(donation);
             this.donations.splice(index, 1);
             // this.donations = this.donations.filter((donation, i) => i !== index);
         }
