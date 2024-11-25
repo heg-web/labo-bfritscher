@@ -12,11 +12,12 @@
                     <label><input type="radio" name="sortOrder" v-model="sortOrder" value="t" />Top</label>
                 </div>
                 <ul>
-                    <li v-for="(donation, index) in sortedDonations" v-bind:key="index">
-                        <img v-bind:src="donationToImg(donation)" />
-                        {{ toCHF(donation.amount) }}
-                        <button v-on:click="removeDonation(donation)">x</button>
-                    </li>
+                    <app-donation
+                        v-for="(donation, index) in sortedDonations"
+                        v-bind:key="index"
+                        v-bind:donation="donation"
+                        v-on:remove-donation="removeDonation(donation)"
+                    />
                 </ul>
                 <p>Total: {{ toCHF(total) }}</p>
             </div>
@@ -30,12 +31,16 @@
 
 <script>
 import { toCHF } from "./utils/filters";
+import AppDonation from "./components/AppDonation.vue";
 
 function numberToDonation(num) {
     return { amount: num };
 }
 
 export default {
+    components: {
+        AppDonation
+    },
     data() {
         return {
             sortOrder: "r",
@@ -68,15 +73,6 @@ export default {
         }
     },
     methods: {
-        donationToImg(donation) {
-            let level = 3;
-            if (donation.amount < 10) {
-                level = 1;
-            } else if (donation.amount < 20) {
-                level = 2;
-            }
-            return `https://gistcdn.githack.com/bfritscher/6ff8e74b80d44616944843fe83cc5d19/raw/2d4e25748fbbe681681932444a7ef339c90d4dde/chevron_${level}.svg`;
-        },
         toCHF,
         addAmount() {
             this.donations.push(numberToDonation(this.amount));
