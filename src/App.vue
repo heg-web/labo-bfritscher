@@ -13,7 +13,7 @@
                 </div>
                 <ul>
                     <li v-for="(donation, index) in sortedDonations" v-bind:key="index">
-                        <img v-bind:src="donationToImg(donation)" >
+                        <img v-bind:src="donationToImg(donation)" />
                         {{ toCHF(donation.amount) }}
                         <button v-on:click="removeDonation(donation)">x</button>
                     </li>
