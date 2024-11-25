@@ -17,6 +17,7 @@
                         <button v-on:click="removeDonation(index)">x</button>
                     </li>
                 </ul>
+                <p>Total: {{ toCHF(total) }}</p>
             </div>
             <div class="col-sm">
                 <i class="fas fa-ice-cream display-1 text-primary"></i>
@@ -42,6 +43,14 @@ export default {
             return this.donations.slice(0).sort((a, b) => {
                 return b - a;
             });
+        },
+        total() {
+            let total = 0;
+            for (let donation of this.donations) {
+                total += donation;
+            }
+            return total;
+            // return this.donations.reduce((acc, donation) => acc + donation, 0);
         },
         sortedDonations() {
             if (this.sortOrder === "r") {
