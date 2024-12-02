@@ -33,6 +33,8 @@ import AppDonation from "./components/AppDonation.vue";
 import AppAdd from "./components/AppAdd.vue";
 import { nanoid } from "nanoid";
 
+const LOCAL_STORAGE_KEY = "donations";
+
 function numberToDonation(num) {
     return {
         id: nanoid(),
@@ -46,9 +48,10 @@ export default {
         AppAdd
     },
     data() {
+        const donations = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY) || "[]");
         return {
             sortOrder: "r",
-            donations: [numberToDonation(23), numberToDonation(53), numberToDonation(43)]
+            donations
         };
     },
     computed: {
@@ -75,15 +78,29 @@ export default {
             return [];
         }
     },
+    watch: {
+        donations: {
+            handler() {
+                this.save();
+            },
+            deep: true
+        }
+    },
     methods: {
         toCHF,
         addAmount(amount) {
             this.donations.push(numberToDonation(amount));
+            // this.save();
         },
         removeDonation(donation) {
             const index = this.donations.indexOf(donation);
             this.donations.splice(index, 1);
             // this.donations = this.donations.filter((donation, i) => i !== index);
+            //this.save();
+        },
+        save() {
+            // localStorage et JSON...
+            localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(this.donations));
         }
     }
 };
