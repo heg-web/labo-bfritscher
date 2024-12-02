@@ -109,11 +109,6 @@ export default {
 ul {
     list-style-type: none;
 }
-img {
-    width: 30px;
-    height: 30px;
-    margin-right: 10px;
-}
 .flip-list-move,
 .flip-list-enter-active,
 .flip-list-leave-active {
