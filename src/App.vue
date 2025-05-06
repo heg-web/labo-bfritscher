@@ -19,28 +19,50 @@
 </template>
 
 <script>
-import { toChf } from './utils';
+import { toChf } from "./utils";
 
 export default {
     data() {
+        const savedDonations = localStorage.getItem("donations");
+        let donations = [];
+        if (savedDonations) {
+            donations = JSON.parse(savedDonations);
+        }
+
         return {
             amount: "",
             sortOrder: "recent",
-            donations: [
-                {
-                    value: 1234
-                },
-                {
-                    value: 34
-                },
-                {
-                    value: 234
-                },
-                {
-                    value: 234
-                }
-            ]
+            donations: donations
         };
+    },
+    methods: {
+        saveDonations() {
+            localStorage.setItem("donations", JSON.stringify(this.donations));
+        },
+        toChf(value) {
+            return toChf(value);
+        },
+        addAmount() {
+            this.donations.push({
+                value: this.amount
+            });
+            this.saveDonations();
+            this.amount = "";
+        },
+        removeDonation(d) {
+            const index = this.donations.indexOf(d);
+            this.donations.splice(index, 1);
+            this.saveDonations();
+        },
+        urlImage(value) {
+            let level = 1;
+            if (value > 20) {
+                level = 3;
+            } else if (value > 10) {
+                level = 2;
+            }
+            return `https://gistcdn.githack.com/bfritscher/6ff8e74b80d44616944843fe83cc5d19/raw/2d4e25748fbbe681681932444a7ef339c90d4dde/chevron_${level}.svg`;
+        }
     },
     computed: {
         donationsSorted() {
@@ -62,30 +84,6 @@ export default {
             }
             return total;
             */
-        }
-    },
-    methods: {
-        toChf(value) {
-          return toChf(value);
-        },
-        addAmount() {
-            this.donations.push({
-                value: this.amount
-            });
-            this.amount = "";
-        },
-        removeDonation(d) {
-            const index = this.donations.indexOf(d);
-            this.donations.splice(index, 1);
-        },
-        urlImage(value) {
-            let level = 1;
-            if (value > 20) {
-                level = 3;
-            } else if (value > 10) {
-                level = 2;
-            }
-            return `https://gistcdn.githack.com/bfritscher/6ff8e74b80d44616944843fe83cc5d19/raw/2d4e25748fbbe681681932444a7ef339c90d4dde/chevron_${level}.svg`;
         }
     }
 };
