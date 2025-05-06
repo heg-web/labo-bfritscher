@@ -14,6 +14,7 @@
                 {{ d.value }} <button class="btn btn-danger btn-sm" v-on:click="removeDonation(d)">x</button>
             </li>
         </ul>
+        <p>Total: {{ total }}</p>
     </div>
 </template>
 
@@ -48,6 +49,17 @@ export default {
                 return this.donations.slice().reverse();
             }
             return this.donations;
+        },
+        total() {
+            return this.donations.reduce((total, d) => total + d.value, 0);
+            /*
+            let total = 0;
+            for (let i; i< this.donations.length; i++) {
+              let d = this.donations[i];
+              total = total + d.value;
+            }
+            return total;
+            */
         }
     },
     methods: {
