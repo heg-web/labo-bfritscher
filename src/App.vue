@@ -11,14 +11,16 @@
         <ul>
             <li v-for="(d, index) in donationsSorted" v-bind:key="index">
                 <img v-bind:src="urlImage(d.value)" class="flag" />
-                {{ d.value }} <button class="btn btn-danger btn-sm" v-on:click="removeDonation(d)">x</button>
+                {{ toChf(d.value) }} <button class="btn btn-danger btn-sm" v-on:click="removeDonation(d)">x</button>
             </li>
         </ul>
-        <p>Total: {{ total }}</p>
+        <p>Total: {{ toChf(total) }}</p>
     </div>
 </template>
 
 <script>
+import { toChf } from './utils';
+
 export default {
     data() {
         return {
@@ -63,6 +65,9 @@ export default {
         }
     },
     methods: {
+        toChf(value) {
+          return toChf(value);
+        },
         addAmount() {
             this.donations.push({
                 value: this.amount
