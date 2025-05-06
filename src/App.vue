@@ -10,6 +10,7 @@
         </p>
         <ul>
             <li v-for="(d, index) in donationsSorted" v-bind:key="index">
+                <img v-bind:src="urlImage(d.value)" class="flag" />
                 {{ d.value }} <button class="btn btn-danger btn-sm" v-on:click="removeDonation(d)">x</button>
             </li>
         </ul>
@@ -59,9 +60,22 @@ export default {
         removeDonation(d) {
             const index = this.donations.indexOf(d);
             this.donations.splice(index, 1);
+        },
+        urlImage(value) {
+            let level = 1;
+            if (value > 20) {
+                level = 3;
+            } else if (value > 10) {
+                level = 2;
+            }
+            return `https://gistcdn.githack.com/bfritscher/6ff8e74b80d44616944843fe83cc5d19/raw/2d4e25748fbbe681681932444a7ef339c90d4dde/chevron_${level}.svg`;
         }
     }
 };
 </script>
 
-<style></style>
+<style>
+.flag {
+    width: 30px;
+}
+</style>
