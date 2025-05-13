@@ -1,9 +1,9 @@
 <template>
     <div class="container">
         <h1>Donations</h1>
-        <input v-model.number="amount" type="number" />
-        <button v-on:click="addAmount()" v-bind:disabled="amount <= 0">add</button>
-        <p v-if="amount != '' && amount <= 0" class="bg-danger text-white mt-3 p-2">Attention...</p>
+
+        <app-add @add-amount="addAmount"></app-add>
+
         <p>
             <label><input type="radio" name="sortOrder" value="recent" v-model="sortOrder" />Recent</label>
             <label><input type="radio" name="sortOrder" value="top" v-model="sortOrder" />Top </label>
@@ -15,13 +15,19 @@
             </li>
         </ul>
         <p>Total: {{ toChf(total) }}</p>
+
+        <app-add @add-amount="addAmount($event)"></app-add>
     </div>
 </template>
 
 <script>
 import { toChf } from "./utils";
+import AppAdd from "./components/AppAdd.vue";
 
 export default {
+    components: {
+        "app-add": AppAdd
+    },
     data() {
         const savedDonations = localStorage.getItem("donations");
         let donations = [];
@@ -30,7 +36,6 @@ export default {
         }
 
         return {
-            amount: "",
             sortOrder: "recent",
             donations: donations
         };
@@ -42,12 +47,11 @@ export default {
         toChf(value) {
             return toChf(value);
         },
-        addAmount() {
+        addAmount(amount) {
             this.donations.push({
-                value: this.amount
+                value: amount
             });
             this.saveDonations();
-            this.amount = "";
         },
         removeDonation(d) {
             const index = this.donations.indexOf(d);
