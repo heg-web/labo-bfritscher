@@ -9,24 +9,23 @@
             <label><input type="radio" name="sortOrder" value="top" v-model="sortOrder" />Top </label>
         </p>
         <ul>
-            <li v-for="(d, index) in donationsSorted" v-bind:key="index">
-                <img v-bind:src="urlImage(d.value)" class="flag" />
-                {{ toChf(d.value) }} <button class="btn btn-danger btn-sm" v-on:click="removeDonation(d)">x</button>
-            </li>
+            <app-donation-item v-for="(d, index) in donationsSorted" v-bind:key="index" v-bind:donation="d" @remove="removeDonation"></app-donation-item>
         </ul>
         <p>Total: {{ toChf(total) }}</p>
 
-        <app-add @add-amount="addAmount($event)"></app-add>
+        <app-add @add-amount="addAmount($eve)"></app-add>
     </div>
 </template>
 
 <script>
 import { toChf } from "./utils";
 import AppAdd from "./components/AppAdd.vue";
+import AppDonationItem from "./components/AppDonationItem.vue";
 
 export default {
     components: {
-        "app-add": AppAdd
+        "app-add": AppAdd,
+        "app-donation-item": AppDonationItem
     },
     data() {
         const savedDonations = localStorage.getItem("donations");
@@ -57,15 +56,6 @@ export default {
             const index = this.donations.indexOf(d);
             this.donations.splice(index, 1);
             this.saveDonations();
-        },
-        urlImage(value) {
-            let level = 1;
-            if (value > 20) {
-                level = 3;
-            } else if (value > 10) {
-                level = 2;
-            }
-            return `https://gistcdn.githack.com/bfritscher/6ff8e74b80d44616944843fe83cc5d19/raw/2d4e25748fbbe681681932444a7ef339c90d4dde/chevron_${level}.svg`;
         }
     },
     computed: {
